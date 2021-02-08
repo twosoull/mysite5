@@ -27,6 +27,14 @@ public class UserDao {
 		
 		return sqlSession.selectOne("user.selectUser",userVo);
 	}
+	//아이디체크
+	public UserVo selectOne(String id) {
+		System.out.println("[DAO] : selectOne");
+		System.out.println(id);
+		
+		return sqlSession.selectOne("user.selectById",id);
+	
+	}
 	
 	//회원정보수정폼 -->회원정보 가져오기(modifyForm)
 	public UserVo selectUser2(int no ) {

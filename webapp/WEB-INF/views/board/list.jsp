@@ -84,8 +84,16 @@
 					<div id="paging">
 						<ul>
 							<li><a href="${pageContext.request.contextPath}/board/list?pageNum=${boardPage.prev}">◀</a></li>
-							<c:forEach begin="1" end ="${boardPage.page}" step = "1" varStatus="st">
-								<li><a href="${pageContext.request.contextPath}/board/list?pageNum=${st.count}">${st.count}</a></li>
+							<c:forEach begin="1" end="${boardPage.page}" step="1" varStatus="st">
+							
+
+									<li><a href="${pageContext.request.contextPath}/board/list?pageNum=${st.count}"><strong>${st.count}</strong></a></li>
+
+									<li><a href="${pageContext.request.contextPath}/board/list?pageNum=${st.count}">${st.count}</a></li>
+
+
+							
+
 							</c:forEach>
 							<li><a href="${pageContext.request.contextPath}/board/list?pageNum=${boardPage.next}">▶</a></li>
 						</ul>

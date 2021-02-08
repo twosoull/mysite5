@@ -8,8 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.javaex.dao.UserDao;
 import com.javaex.service.UserService;
 import com.javaex.vo.UserVo;
 
@@ -38,7 +39,20 @@ public class UserController {
 		
 		return "user/joinOk";
 	}
-
+	//id 중복체크
+	@ResponseBody
+	@RequestMapping(value ="/idcheck" ,  method= {RequestMethod.GET , RequestMethod.POST})
+	public String idCheck(@RequestParam("id") String id,@RequestParam("password") String password) { //modelAtribute
+		System.out.println("idcheck");
+		System.out.println("chkid " + id);
+		//패스워드는 테스트용 코드 추가
+		System.out.println("chkPass:"+password);
+		String result = userService.idCheck(id);
+		System.out.println(result);
+		return result; // @ResponseBody --> response의 body 영역에 data만 보낸다(return값)
+	}
+	
+	
 	// 로그인폼
 	@RequestMapping(value = "/loginForm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String loginForm() {

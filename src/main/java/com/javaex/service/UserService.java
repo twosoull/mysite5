@@ -25,6 +25,26 @@ public class UserService {
 		
 	}
 	
+	//idcheck
+	public String idCheck(String id) {
+		System.out.println("userService idCheck()");
+		UserVo vo = userDao.selectOne(id);
+		System.out.println("service" + vo);
+		
+		String result = "";
+		
+		if(vo == null) {
+			//사용할수있는 id
+			result = "can";
+		}else {
+			//사용할수없는 id
+			result = "cant";
+		}
+		
+		
+		return result;
+
+	}
 	public UserVo modifyForm(int no) {
 		System.out.println("userService modifyForm()");
 		return userDao.selectUser2(no);
