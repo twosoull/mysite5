@@ -33,4 +33,19 @@ public class GuestService {
 		
 		return guestDao.delete(guestVo);
 	}
+	
+	// ajax 글저장 및 저장 vo 받기
+	public GuestVo writeResultVo(GuestVo guestVo) {
+		
+		System.out.println("[service] dao:xml 시키기전 = " + guestVo);
+		//글저장
+		guestDao.insertSelectKey(guestVo);
+		System.out.println("[service] dao:xml 시키기gn = " + guestVo);
+		int no = guestVo.getNo();
+		
+		//글 1개 가져오기
+		return  guestDao.selectOne(no);
+		
+		
+	}
 }

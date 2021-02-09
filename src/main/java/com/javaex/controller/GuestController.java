@@ -57,5 +57,11 @@ public class GuestController {
 			return "redirect:/guest/deleteForm?no="+guestVo.getNo()+"&result=fail";
 		}
 	}
+	//ajaxList
+	@RequestMapping(value="/ajaxList",method = {RequestMethod.GET , RequestMethod.POST})
+	public String ajaxList() {
+		System.out.println("controller ajaxList");
+		return "guest/ajaxList";
+	}
 
 }
