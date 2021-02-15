@@ -105,15 +105,14 @@
 					<h4 class="modal-title">방명록 삭제</h4>
 				</div>
 				<div class="modal-body">
-					<label>비밀번호</label>
-					<input id="modalPassword" type="password" name="" value="">
-					
+					<label>비밀번호</label> <input id="modalPassword" type="password" name="" value="">
+
 					<!-- no는 hidden 처리 -->
-					<input id= "modalNo" type="text" name="no" value="">
+					<input id="modalNo" type="text" name="no" value="">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-					<button id= "modalBtnDel"type="button" class="btn btn-primary">삭제</button>
+					<button id="modalBtnDel" type="button" class="btn btn-primary">삭제</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -132,19 +131,18 @@
 
 	});
 	//모달창 삭제버튼 클릭할때 --> 삭제프로세서
-	$("#modalBtnDel").on("click",function(){
+	$("#modalBtnDel").on("click", function() {
 		console.log("모달창 삭제버튼클릭");
 		//모달창 비밀번호 , no 수집
 		var no = $("#modalNo").val();
-		
+
 		//줄여서 함수로 만들어주기 20개라고 가장
 		var guestbookVo = {
-			password: $("#modalPassword").val(),
+			password : $("#modalPassword").val(),
 			no : $("#modalNo").val()
 		};
 		console.log(guestbookVo);
-		
-		
+
 		//모달창 no password 보내고 count(삭제여부) 받기
 		$.ajax({
 
@@ -155,36 +153,33 @@
 
 			dataType : "json",
 			success : function(count) { //성공시
-				console.log("count:"+count);
-				
-				if(count == 1){
-				//no 테이블(글) 화면에서 안보이도록 처리
-				//count==1 --> 삭제작업
-				$("#t-"+ no).remove();
-				
-				
-				//모달창닫기
-				$("#delModal").modal("hide");
-				}else{
-				//count == 0
-				
-				
-				alert("비밀번호가 틀렸습니다");
-				$("#modalPassword").val("");
-				//모달창 닫기
-				//$("#delModal").modal("hide");
-					
+				console.log("count:" + count);
+
+				if (count == 1) {
+					//no 테이블(글) 화면에서 안보이도록 처리
+					//count==1 --> 삭제작업
+					$("#t-" + no).remove();
+
+					//모달창닫기
+					$("#delModal").modal("hide");
+				} else {
+					//count == 0
+
+					alert("비밀번호가 틀렸습니다");
+					$("#modalPassword").val("");
+					//모달창 닫기
+					//$("#delModal").modal("hide");
+
 				}
-				
+
 			},
 			error : function(XHR, status, error) { //실패
 				console.error(status + " : " + error);
 			}
 		});
 
-		
 	});
-	
+
 	//삭제버튼 클릭
 	$("#guestbookListArea").on("click", "a", function() {
 
@@ -192,10 +187,9 @@
 		console.log("모달 창 호출");
 		//비밀번호 필드 비워놓기
 		$("#modalPassword").val("");
-		
-		
+
 		var no = $(this).data("no");
-		
+
 		//삭제버튼에 적어준 data-no 속성의 값을 불러와 모달창에
 		//id="modalNo" 인 곳에 넣어준다
 		//삭제버튼 속성 --> 모달창으로 내용이동
@@ -204,8 +198,7 @@
 		//값을 바꿔준후에 띄우는 것일 뿐이다
 		//모달창 띄우기
 		$("#delModal").modal();
-		
-		
+
 	});
 
 	$("#btnSubmit").on("click", function() {
@@ -214,11 +207,11 @@
 		var guestbookVo = {
 			name : $("[name='name']").val(),
 			password : $("[name='pass']").val(),
-			content : $("[name='content']").val()	
+			content : $("[name='content']").val()
 		}
-	
+
 		console.log(guestbookVo);
-		
+
 		//ajax 방식으로 데이터 요청
 		$.ajax({
 

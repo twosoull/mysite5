@@ -5,15 +5,15 @@
 
 <mapper namespace="board">
 
-	<resultMap id = "resultMapBoardVo" type="BoardVo">
-		<result column ="no" property="no"/>
-		<result column ="title" property="title"/>
-		<result column ="content" property="content"/>
-		<result column ="hit" property="hit"/>
-		<result column ="reg_date" property="regDate"/>
-		<result column ="user_no" property="userNo"/>
-		<result column ="name" property="name"/>
-		<result column ="rowno" property="rowNo"/>
+	<resultMap id="resultMapBoardVo" type="BoardVo">
+		<result column="no" property="no" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="hit" property="hit" />
+		<result column="reg_date" property="regDate" />
+		<result column="user_no" property="userNo" />
+		<result column="name" property="name" />
+		<result column="rowno" property="rowNo" />
 	</resultMap>
 	<select id="pageAmount" resultType="int">
 		<![CDATA[
@@ -21,37 +21,97 @@
 			from board
 		]]>
 	</select>
-	
-	<select id="selectList" parameterType = "BoardVo" resultMap="resultMapBoardVo">
+
+	<select id="selectList" parameterType="BoardVo" resultMap="resultMapBoardVo">
 		<![CDATA[
-			select rowno,
-   			       no,
-       			   title,
-       			   hit,
-       			   reg_date,
-       			   user_no,
-       			   name
-			from (select rownum as rowno,
-       				     no,
-       				     title,
-       					 hit,
-       					 reg_date,
-       					 user_no,
-       					 name
-				  from(SELECT b.no,
-            				  b.title,
-            			      b.hit,
-            				  b.reg_date,
-            				  b.user_no,
-            				  u.name
-     					FROM board b  , USERS u
-     					where b.user_no = u.no
-     					     order by b.no desc)
-     			  )
-			where rowno between #{firstNum} and #{lastNum}
-			order by rowno asc
+			select b.no,
+    			   b.title,
+       			   b.hit,
+       			   to_char(b.reg_date, 'YYYY-MM-DD HH:MI:SS') reg_date,
+       			   b.user_no,
+       			   u.name
+			from board b,users u
+			where b.user_no = u.no
+			order by b.no desc
+			
 		]]>
 	</select>
+	<select id="selectList2" parameterType="string" resultMap="resultMapBoardVo">
+		<![CDATA[
+			select b.no,
+    			   b.title,
+       			   b.hit,
+       			   to_char(b.reg_date, 'YYYY-MM-DD HH:MI:SS') reg_date,
+       			   b.user_no,
+       			   u.name
+			from board b,users u
+			where b.user_no = u.no
+		]]>
+
+		<if test="value != null and value != '' ">
+			and title like '%'||#{keyword}||'%'
+		</if>
+			
+		<![CDATA[
+			order by b.no desc
+		
+		
+		]]>
+
+	</select>
+	
+	<select id="selectList3" parameterType="map" resultMap="resultMapBoardVo">
+		<![CDATA[
+			select r.rnum,
+			       r.no,
+			       r.title,
+			       r.hit,
+			       r.reg_date,
+			       r.user_no,
+			       r.name
+			from (select rownum rnum,
+			             o.no,
+			             o.title, 
+			             o.hit,
+			             o.reg_date,
+			             o.name,
+			             o.user_no
+			      from (select b.no,
+			                   b.title,
+			                   b.hit,
+			                   to_char(b.reg_date, 'YYYY-MM-DD HH:MI:SS') reg_date,
+			                   b.user_no,
+			                   u.name
+			            from board b,users u
+			            where b.user_no = u.no
+		]]>
+			        <if test=" keyword != null and keyword != ''">
+				        and title like '%'||#{keyword}||'%'
+			        </if>
+			            
+		<![CDATA[
+			            order by b.no desc) o) r
+			where r.rnum >= #{startRnum}
+			and r.rnum <= #{endRnum}		
+		]]>
+		
+	</select>
+	
+	<!-- 전체 글갯수 가져오기 -->
+	<select id="selectTotalCnt" parameterType="string" resultType="int">
+		<![CDATA[
+			select count(*)
+			from board b, users u
+			where b.user_no = u.no
+			]]>
+		<if test=" value != null and value != '' ">
+			and title like '%'||#{keyword}||'%'			
+		</if>
+			
+	
+	</select>
+	
+
 	<select id="selectBoard" parameterType="int" resultMap="resultMapBoardVo">
 		<![CDATA[
 			SELECT b.no as no,
@@ -65,16 +125,16 @@
 			where b.user_no = u.no
 			and b.no=#{no}
 		]]>
-	
+
 	</select>
-	
-	<update id="updateHit" parameterType = "int">
+
+	<update id="updateHit" parameterType="int">
 		<![CDATA[
 			update board
 			set hit = hit + 1
 			where no = #{no}
 		]]>
-	
+
 	</update>
 	<select id="selectBoard2" parameterType="int" resultMap="resultMapBoardVo">
 		<![CDATA[
@@ -88,10 +148,10 @@
 			where b.user_no = u.no
 			and b.no=#{no}
 		]]>
-	
+
 	</select>
-	
-	<update id="update" parameterType = "BoardVo">
+
+	<update id="update" parameterType="BoardVo">
 		<![CDATA[
 			update board
 			set title = #{title},
@@ -99,10 +159,10 @@
 			where no = #{no}
 		
 		]]>
-	
+
 	</update>
-	
-	<insert id="insert" parameterType = "BoardVo">
+
+	<insert id="insert" parameterType="BoardVo">
 		<![CDATA[
 			insert into board
 			values(SEQ_BOARD_NO.nextval,
@@ -113,15 +173,15 @@
 			       #{userNo}
 			       )
 		]]>
-	
+
 	</insert>
-	<delete id="board.delete" parameterType = "int">
+	<delete id="board.delete" parameterType="int">
 	<![CDATA[
 		DELETE FROM BOARD
 		WHERE no = #{no}
 	
 	
 	]]>
-	
+
 	</delete>
 </mapper>
