@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="gallary">
+	<resultMap id="resultMapGallaryVo" type="GallaryVo">
+		<result column="no" property="no"/>
+		<result column="user_no" property="userNo"/>
+		<result column="content" property="content"/>
+		<result column="filepath" property="filePath"/>
+		<result column="orgname" property="orgName"/>
+		<result column="savename" property="saveName"/>
+		<result column="filesize" property="fileSize"/>
+		<result column="name" property="name"/>
+	
+	
+	</resultMap>
+	<select id="selectGallaryList" resultMap="resultMapGallaryVo">
+		<![CDATA[
+			select g.no,
+			       g.user_no,
+			       g.content,
+			       g.filepath,
+			       g.orgname,
+			       g.savename,
+			       u.name
+			from gallary g, users u
+			where g.user_no = u.no
+			order by g.no desc			
+		]]>
+	</select>
+	<!-- saveName값으로 정보얻기 -->
+	<select id="selectOne" parameterType="string" resultMap="resultMapGallaryVo">
+		<![CDATA[
+			select g.no,
+			       g.user_no,
+			       g.content,
+			       g.filepath,
+			       g.orgname,
+			       g.savename,
+			       u.name
+			from gallary g, users u
+			where g.user_no = u.no
+			and saveName = #{saveName}			
+		]]>
+	
+	</select>
+	
+	<!-- 파일 정보 입력 -->
+	<insert id="insertGallary" parameterType="GallaryVo">
+		<![CDATA[
+			insert into gallary
+			values( SEQ_GALLARY_NO.nextval,
+			        1,
+			        #{content},
+			        #{filePath},
+			        #{orgName},
+			        #{saveName},
+			        #{fileSize}
+			        )
+					
+		]]>
+	</insert>
+	
+	
+</mapper>

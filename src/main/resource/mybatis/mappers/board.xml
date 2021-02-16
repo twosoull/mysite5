@@ -103,7 +103,7 @@
 			select count(*)
 			from board b, users u
 			where b.user_no = u.no
-			]]>
+		]]>
 		<if test=" value != null and value != '' ">
 			and title like '%'||#{keyword}||'%'			
 		</if>
