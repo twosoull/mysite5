@@ -187,7 +187,8 @@
 		console.log("모달 창 호출");
 		//비밀번호 필드 비워놓기
 		$("#modalPassword").val("");
-
+		
+		
 		var no = $(this).data("no");
 
 		//삭제버튼에 적어준 data-no 속성의 값을 불러와 모달창에

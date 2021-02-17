@@ -58,7 +58,7 @@
 
 						<!-- 이미지반복영역 -->
 						<c:forEach items="${gallaryList}" var="vo">
-							<li id="li-${vo.no}" data-no="${vo.no}">
+							<li id="li-${vo.no}" data-no="${vo.no}" data-uno="${vo.userNo}">
 								<div class="view">
 									<img id="image" class="imgItem" src="${pageContext.request.contextPath}/upload/${vo.saveName}">
 									<div class="imgWriter">
@@ -154,7 +154,9 @@
 				<form method="" action="">
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>			
+						
 						<button type="button" class="btn btn-danger" id="btnDel">삭제</button>		
+					
 					</div>
 
 
@@ -186,6 +188,10 @@
 		console.log($(this));
 		var no = $(this).data("no")
 		
+		var userNo = $(this).data("uno");
+		
+	
+		
 		$.ajax({
 
 			url : "${pageContext.request.contextPath}/api/gallary/modalGallary2", //컨트롤러의 url과 파라미터
@@ -209,6 +215,28 @@
 			}
 		});
 		
+		//session값
+		$.ajax({
+
+			url : "${pageContext.request.contextPath}/api/gallary/session", //컨트롤러의 url과 파라미터
+			type : "post", // 겟 포스트
+			//contentType : "application/json",
+			//data : {no : no},
+
+			dataType : "json",
+			success : function(session) { //성공시
+				console.log(session);
+				
+				if(userNo != session){
+					$("#btnDel").remove();
+				}
+				
+			},
+			error : function(XHR, status, error) { //실패
+				$("#btnDel").remove();
+				console.error(status + " : " + error);
+			}
+		});
 		
 		$("#viewModal").modal();
 	});

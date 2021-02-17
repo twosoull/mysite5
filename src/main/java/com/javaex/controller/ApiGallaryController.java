@@ -1,6 +1,6 @@
 package com.javaex.controller;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.GallaryService;
 import com.javaex.vo.GallaryVo;
+import com.javaex.vo.UserVo;
 
 @Controller
 @RequestMapping(value="/api/gallary" , method= {RequestMethod.GET,RequestMethod.POST})
@@ -48,9 +49,19 @@ public class ApiGallaryController {
 	public int remove(@RequestParam("no")int no) {
 		System.out.println("[ApiGallaryController] : modalGallary()");
 		System.out.println(no);
-		
 		return gallaryService.remove(no);
 		
 	}
-
+	@ResponseBody
+	@RequestMapping(value="/session" , method= {RequestMethod.GET,RequestMethod.POST})
+	public int session(HttpSession session) {
+		System.out.println("[ApiGallaryController] : session()");
+		UserVo userVo = (UserVo)session.getAttribute("authUser");
+		System.out.println(userVo.getNo());
+		if(userVo.getNo() == 0) {
+			return 0;
+		}else {
+			return userVo.getNo();
+		}
+	}
 }
