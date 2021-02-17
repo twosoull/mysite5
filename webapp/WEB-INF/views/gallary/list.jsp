@@ -52,17 +52,22 @@
 						<button id="btnImgUpload">이미지올리기</button>
 						<div class="clear"></div>
 					</c:if>
-
+					<form action="${pageContext.request.contextPath}/gallary/list" method="get">
+						<div class="form-group text-right">
+							<input type="text" name="keyword">
+							<button type="submit" id=btn_search>검색</button>
+						</div>
+					</form>
 
 					<ul id="viewArea">
 
 						<!-- 이미지반복영역 -->
-						<c:forEach items="${gallaryList}" var="vo">
-							<li id="li-${vo.no}" data-no="${vo.no}" data-uno="${vo.userNo}">
+						<c:forEach items="${pMap.gallaryList}" var="vo">
+							<li id="li-${vo.no}" data-no="${vo.no}" data-uno="${vo.userNo}" data-session="${vo.userNo == authUser.no }">
 								<div class="view">
 									<img id="image" class="imgItem" src="${pageContext.request.contextPath}/upload/${vo.saveName}">
 									<div class="imgWriter">
-										작성자: <strong>${vo.name}</strong> 
+										작성자: <strong>${vo.name}</strong>
 									</div>
 								</div>
 							</li>
@@ -75,9 +80,31 @@
 				<!-- //list -->
 			</div>
 			<!-- //board -->
+
 		</div>
 		<!-- //content  -->
-		<div class="clear"></div>
+		<div id="paging">
+		<c:if test="${!empty pMap.gallaryList }">
+			<ul>
+				<c:if test="${pMap.prev}">
+					<li><a href="${pageContext.request.contextPath }/gallary/list?crtPage=${pMap.startPageNum-1}&keyword=${param.keyword}">◀</a></li>
+				</c:if>
+
+				<c:forEach begin="${pMap.startPageNum}" end="${pMap.endPageNum }" step="1" var="page">
+					<li class="active"><a href="${pageContext.request.contextPath }/gallary/list?crtPage=${page}&keyword=${param.keyword}">${page}</a></li>
+				</c:forEach>
+
+				<c:if test="${pMap.next }">
+					<li><a href="${pageContext.request.contextPath }/gallary/list?crtPage=${pMap.endPageNum+1}&keyword=${param.keyword}">▶</a></li>
+				</c:if>
+			</ul>
+
+
+	
+			<div class="clear"></div>
+		</c:if>
+		</div>
+
 
 		<c:import url="/WEB-INF/views/include/footer.jsp"></c:import>
 		<!-- //footer -->
@@ -95,9 +122,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title">
-					
-					</h4>
+					<h4 class="modal-title"></h4>
 				</div>
 
 				<form method="post" action="${pageContext.request.contextPath }/gallary/add" enctype="multipart/form-data">
@@ -132,31 +157,27 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title">
-					이미지보기
-					</h4>
+					<h4 class="modal-title">이미지보기</h4>
 				</div>
 				<div class="modal-body">
 
-					<div id = "formImage"class="formgroup">
-						
+					<div id="formImage" class="formgroup">
+
 						<!-- ajax로 처리 : 이미지출력 위치-->
 					</div>
 
 					<div class="formgroup">
 						<p id="viewModelContent"></p>
 					</div>
-					
+
 				</div>
-				<div id="nohidden">
-				
-				</div>
+				<div id="nohidden"></div>
 				<form method="" action="">
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>			
-						
-						<button type="button" class="btn btn-danger" id="btnDel">삭제</button>		
-					
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+
+						<button type="button" class="btn btn-danger" id="btnDel">삭제</button>
+
 					</div>
 
 
@@ -173,93 +194,105 @@
 </body>
 
 <script type="text/javascript">
-	
-
 	//업로드 모달창
 	$("#btnImgUpload").on("click", function() {
 		$("#addModal").modal();
 
 	});
-	
+
 	//이미지 보기 모달창
-	$("#viewArea").on("click","li",function(){
-		console.log("li클릭");
-		//리스트 속성확인
-		console.log($(this));
-		var no = $(this).data("no")
-		
-		var userNo = $(this).data("uno");
-		
-	
-		
-		$.ajax({
+	$("#viewArea")
+			.on(
+					"click",
+					"li",
+					function() {
+						console.log("li클릭");
+						//리스트 속성확인
+						console.log($(this));
+						var no = $(this).data("no")
 
-			url : "${pageContext.request.contextPath}/api/gallary/modalGallary2", //컨트롤러의 url과 파라미터
-			type : "post", // 겟 포스트
-			//contentType : "application/json",
-			data : {no : no},
+						//ajax를 이용한 세션값을 꺼낼때 사용됌
+						//var userNo = $(this).data("uno");
 
-			dataType : "json",
-			success : function(gallaryVo) { //성공시
-				console.log(gallaryVo);
-				
-				$("#btnDel").val(no);
-				imgVal(gallaryVo);
-				
-				$("#viewModelContent").text(gallaryVo.content);
-				
-				
-			},
-			error : function(XHR, status, error) { //실패
-				console.error(status + " : " + error);
-			}
-		});
-		
-		//session값
-		$.ajax({
+						var session = $(this).data("session");
+						console.log(session);
 
-			url : "${pageContext.request.contextPath}/api/gallary/session", //컨트롤러의 url과 파라미터
-			type : "post", // 겟 포스트
-			//contentType : "application/json",
-			//data : {no : no},
+						$
+								.ajax({
 
-			dataType : "json",
-			success : function(session) { //성공시
-				console.log(session);
-				
-				if(userNo != session){
-					$("#btnDel").remove();
-				}
-				
-			},
-			error : function(XHR, status, error) { //실패
-				$("#btnDel").remove();
-				console.error(status + " : " + error);
-			}
-		});
-		
-		$("#viewModal").modal();
-	});
-	
+									url : "${pageContext.request.contextPath}/api/gallary/modalGallary2", //컨트롤러의 url과 파라미터
+									type : "post", // 겟 포스트
+									//contentType : "application/json",
+									data : {
+										no : no
+									},
+
+									dataType : "json",
+									success : function(gallaryVo) { //성공시
+										console.log(gallaryVo);
+
+										$("#btnDel").val(no);
+										imgVal(gallaryVo);
+
+										$("#viewModelContent").text(
+												gallaryVo.content);
+
+										if (session == false) {
+											$("#btnDel").remove();
+										}
+
+									},
+									error : function(XHR, status, error) { //실패
+										console.error(status + " : " + error);
+									}
+								});
+						/*
+						//session값
+						$.ajax({
+
+							url : "${pageContext.request.contextPath}/api/gallary/session", //컨트롤러의 url과 파라미터
+							type : "post", // 겟 포스트
+							//contentType : "application/json",
+							//data : {no : no},
+
+							dataType : "json",
+							success : function(session) { //성공시
+								console.log(session);
+								
+								if(userNo != session){
+									$("#btnDel").remove();
+								}
+								
+							},
+							error : function(XHR, status, error) { //실패
+								$("#btnDel").remove();
+								console.error(status + " : " + error);
+							}
+						});
+						 */
+						$("#viewModal").modal();
+					});
+
 	//삭제버튼 클릭
-	$("#btnDel").on("click",function(){
+	$("#btnDel").on("click", function() {
 		console.log("버튼 클릭");
 		var no = $("#btnDel").val();
-		
+
 		$.ajax({
 
 			url : "${pageContext.request.contextPath}/api/gallary/remove", //컨트롤러의 url과 파라미터
 			type : "post", // 겟 포스트
 			//contentType : "application/json",
-			data : {no : no},
+			data : {
+				no : no
+			},
 
 			dataType : "json",
 			success : function(count) { //성공시
 				console.log(count);
-				
-				$("#li-"+no).remove();
-				
-				
+
+				$("#li-" + no).remove();
+
 				$("#viewModal").modal("hide");
 			},
 			error : function(XHR, status, error) { //실패
@@ -267,7 +300,7 @@
 			}
 		});
 	});
-	
+
 	/*
 	//사진 모달창
 	$("#viewArea").on("click","img",function(){
@@ -310,20 +343,15 @@
 		});
 		
 	});
-	*/
-	
-	
-	function imgVal(gallaryVo){
-		
-		str='';
+	 */
+
+	function imgVal(gallaryVo) {
+
+		str = '';
 		str += '<img id="viewModelImg" src=${pageContext.request.contextPath}/upload/'+gallaryVo.saveName+'>'
-		
+
 		$("#formImage").html(str);
 	}
-	
-	
-	
-	
 </script>
 
 

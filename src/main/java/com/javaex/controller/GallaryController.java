@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,14 +23,20 @@ public class GallaryController {
 	private GallaryService gallaryService;
 	
 	@RequestMapping(value="/list" , method = {RequestMethod.GET,RequestMethod.POST})
-	public String list(Model model) {
+	public String list(@RequestParam(value="keyword",required=false,defaultValue="")String keyword,
+			@RequestParam(value="crtPage",required=false,defaultValue="1")int crtPage,
+					   Model model) {
 		System.out.println("GallaryController : list()");
 		
-		List<GallaryVo> gallaryList = gallaryService.list();
-		model.addAttribute("gallaryList",gallaryList);
+		Map<String,Object> pMap = gallaryService.list(crtPage,keyword);
+		model.addAttribute("pMap",pMap);
 		
 		return "/gallary/list";
+	
+	
 	}
+	
+	
 	@RequestMapping(value="/add" , method = {RequestMethod.GET,RequestMethod.POST})
 	public String add(
 					  @RequestParam("file")MultipartFile file,
@@ -42,7 +49,7 @@ public class GallaryController {
 		//db 저장
 		String pathAndName = gallaryService.add(gallaryVo,file);
 		
-		//서버(하드디스크) 저장
+		//서버(하드디스크 저장)
 		gallaryService.upload(pathAndName, file);
 		
 		return "redirect:/gallary/list";

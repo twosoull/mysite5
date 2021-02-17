@@ -43,7 +43,7 @@
 
 	<!-- url매핑 -->
 	<mvc:resources mapping="/upload/**" location="file:C:/javaStudy/uploadGallaryFile/" />
-
+	<mvc:resources mapping="/uploadfile/**" location="file:C:/javaStudy/upload/" />
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
 	<mvc:annotation-driven>
 		<mvc:message-converters>

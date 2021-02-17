@@ -52,6 +52,7 @@ public class ApiGallaryController {
 		return gallaryService.remove(no);
 		
 	}
+	// 이렇게 세션값을 얻는 방식은 세션이 없으면 오류를 보낸다
 	@ResponseBody
 	@RequestMapping(value="/session" , method= {RequestMethod.GET,RequestMethod.POST})
 	public int session(HttpSession session) {
@@ -64,4 +65,5 @@ public class ApiGallaryController {
 			return userVo.getNo();
 		}
 	}
+	
 }

@@ -7,6 +7,13 @@
     border: 1px solid #A6A6A6;
 }
 
+#paging ul {margin: 10px 5px 10px 5px;}
+
+#paging ul>li{
+	float: left;
+	margin: 0px 8px 0px 8px;
+}
+
 #file td {
 	padding: 5px 5px 5px 5px;
 	font-size: 14px;

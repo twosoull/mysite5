@@ -16,18 +16,40 @@
 	
 	
 	</resultMap>
-	<select id="selectGallaryList" resultMap="resultMapGallaryVo">
+	<select id="selectGallaryList" parameterType="map" resultMap="resultMapGallaryVo">
 		<![CDATA[
-			select g.no,
-			       g.user_no,
-			       g.content,
-			       g.filepath,
-			       g.orgname,
-			       g.savename,
-			       u.name
-			from gallary g, users u
-			where g.user_no = u.no
-			order by g.no desc			
+			select r.rnum,
+			       r.no,
+			       r.user_no,
+			       r.content,
+			       r.filepath,
+			       r.orgname,
+			       r.savename,
+			       r.name
+			from(select rownum rnum,
+			            o.no,
+			            o.user_no,
+			            o.content,
+			            o.filepath,
+			            o.orgname,
+			            o.savename,
+			            o.name
+			      from (select g.no,
+			                   g.user_no,
+			                   g.content,
+			                   g.filepath,
+			                   g.orgname,
+			                   g.savename,
+			                   u.name
+			            from gallary g, users u
+			            where g.user_no = u.no
+		]]>
+					<if test=" keyword !=null and keyword !=''">
+			            and g.content like '%'||#{keyword}||'%'
+					</if>			            
+		<![CDATA[
+			            order by no desc) o ) r 
+			where rnum between #{startRnum} and #{endRnum}		
 		]]>
 	</select>
 	<!-- saveName값으로 정보얻기 -->
@@ -62,6 +84,14 @@
 			and g.no = #{no}					
 		]]>
 	
+	</select>
+	
+	<select id="gallary.getTotalGallary" resultType="int">
+		<![CDATA[
+			select count(*)
+			from gallary g , users u
+			where g.user_no= u.no
+		]]>
 	</select>
 	
 	<!-- 파일 정보 입력 -->

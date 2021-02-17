@@ -1,6 +1,7 @@
 package com.javaex.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ public class GallaryDao {
 	@Autowired
 	private SqlSession sqlSession;
 	//LIST 
-	public List<GallaryVo> getList() {
+	public List<GallaryVo> getList(Map<String, Object> map) {
 		System.out.println("[GallaryDao] : getList()");
 		
-		return sqlSession.selectList("gallary.selectGallaryList");
+		return sqlSession.selectList("gallary.selectGallaryList",map);
 	
 	}
 	
@@ -47,6 +48,12 @@ public class GallaryDao {
 	public int delete(int no) {
 		System.out.println("[GallaryDao] : delete");
 		return sqlSession.delete("gallary.delete",no);
+	}
+
+	public int getTotalGallary() {
+		System.out.println("[GallaryDao] : getTotalGallary");
+		return sqlSession.selectOne("gallary.getTotalGallary");
+		
 	}
 
 	
