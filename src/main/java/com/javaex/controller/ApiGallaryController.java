@@ -19,12 +19,37 @@ public class ApiGallaryController {
 	@Autowired
 	private GallaryService gallaryService;
 	
+	//path를 받아와 얻는방식
 	@ResponseBody
-	@RequestMapping(value="modalGallary" , method= {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/modalGallary" , method= {RequestMethod.GET,RequestMethod.POST})
 	public GallaryVo modalGallary(@RequestParam("path")String path) {
+		System.out.println("[ApiGallaryController] : modalGallary()");
+		
 		System.out.println(path);
 		
 		return gallaryService.modalGallary(path);
+		
+	}
+	
+	//no를 받아와 얻는 방식
+	@ResponseBody
+	@RequestMapping(value="/modalGallary2" , method= {RequestMethod.GET,RequestMethod.POST})
+	public GallaryVo modalGallary(@RequestParam("no")int no) {
+		System.out.println("[ApiGallaryController] : modalGallary()");
+		System.out.println(no);
+		return gallaryService.modalGallary(no);
+		
+		
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/remove" , method= {RequestMethod.GET,RequestMethod.POST})
+	public int remove(@RequestParam("no")int no) {
+		System.out.println("[ApiGallaryController] : modalGallary()");
+		System.out.println(no);
+		
+		return gallaryService.remove(no);
 		
 	}
 

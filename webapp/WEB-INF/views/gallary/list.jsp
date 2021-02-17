@@ -58,9 +58,8 @@
 
 						<!-- 이미지반복영역 -->
 						<c:forEach items="${gallaryList}" var="vo">
-							<li>
+							<li id="li-${vo.no}" data-no="${vo.no}">
 								<div class="view">
-									<input class="gallaryno" type="text" name="no" value="${vo.no}">
 									<img id="image" class="imgItem" src="${pageContext.request.contextPath}/upload/${vo.saveName}">
 									<div class="imgWriter">
 										작성자: <strong>${vo.name}</strong> 
@@ -180,14 +179,80 @@
 
 	});
 	
+	//이미지 보기 모달창
+	$("#viewArea").on("click","li",function(){
+		console.log("li클릭");
+		//리스트 속성확인
+		console.log($(this));
+		var no = $(this).data("no")
+		
+		$.ajax({
+
+			url : "${pageContext.request.contextPath}/api/gallary/modalGallary2", //컨트롤러의 url과 파라미터
+			type : "post", // 겟 포스트
+			//contentType : "application/json",
+			data : {no : no},
+
+			dataType : "json",
+			success : function(gallaryVo) { //성공시
+				console.log(gallaryVo);
+				
+				$("#btnDel").val(no);
+				imgVal(gallaryVo);
+				
+				$("#viewModelContent").text(gallaryVo.content);
+				
+				
+			},
+			error : function(XHR, status, error) { //실패
+				console.error(status + " : " + error);
+			}
+		});
+		
+		
+		$("#viewModal").modal();
+	});
+	
+	//삭제버튼 클릭
+	$("#btnDel").on("click",function(){
+		console.log("버튼 클릭");
+		var no = $("#btnDel").val();
+		
+		$.ajax({
+
+			url : "${pageContext.request.contextPath}/api/gallary/remove", //컨트롤러의 url과 파라미터
+			type : "post", // 겟 포스트
+			//contentType : "application/json",
+			data : {no : no},
+
+			dataType : "json",
+			success : function(count) { //성공시
+				console.log(count);
+				
+				$("#li-"+no).remove();
+				
+				
+				$("#viewModal").modal("hide");
+			},
+			error : function(XHR, status, error) { //실패
+				console.error(status + " : " + error);
+			}
+		});
+	});
+	
+	/*
 	//사진 모달창
 	$("#viewArea").on("click","img",function(){
 		console.log("이미지 클릭");
-		var no = $(this).children("gallaryno").val();
+		
 		console.log(no);
 		var path = $(this).attr("src")
-	
+		//data-no가 계속 안먹어서 옳은 선택은 아닌것 같지만 path값으로 시도해보았다
+		//하지만 삭제 버튼 부분에서 로그인유저와 비교할 if문 작성이 불가능 하다고 판단되는데..
+		//어디선가 true false를 받아낸다면 좋으거같은데..흠..머리가 정지된것같다
 		
+		//마지막 삭제로직에서 ajax로 리스트에서 삭제가 되려면 반복문의 전체를 잡아야 된다고 판단됐다
+		//li를 자식태그로 잡아보는 로직 
 		
 		$("#viewModal").modal();
 		
@@ -208,7 +273,7 @@
 				
 				$("#viewModelContent").text(gallaryVo.content);
 				
-				nonum(gallaryVo);
+				$("#btnDel").val(gallaryVo.no);
 				
 			},
 			error : function(XHR, status, error) { //실패
@@ -217,7 +282,7 @@
 		});
 		
 	});
-	
+	*/
 	
 	
 	function imgVal(gallaryVo){
@@ -228,12 +293,7 @@
 		$("#formImage").html(str);
 	}
 	
-	function nonum(gallaryVo){
-		no='';
-		no += '<input type="text" name="no" value="'+gallaryVo.no+'">';
-		console.log(no);
-		$("#nohidden").html(no);
-	}
+	
 	
 	
 </script>

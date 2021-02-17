@@ -78,6 +78,8 @@ public class GallaryService {
 			e.printStackTrace();
 		}
 	}
+	
+	//path로 vo얻기
 	public GallaryVo modalGallary(String path) {
 		System.out.println("[GallaryService]: modalGallary()");
 		
@@ -86,6 +88,21 @@ public class GallaryService {
 		
 		return gallaryDao.getSelectOne(saveName);
 		
+		
+	}
+	
+	//no를 vo얻기
+	public GallaryVo modalGallary(int no) {
+		System.out.println("[GallaryService]: modalGallary()");
+	
+		
+		return gallaryDao.getSelectOne(no);	
+	}
+	
+	public int remove(int no) {
+		
+		System.out.println("[GallaryService]: remove()");
+		return gallaryDao.delete(no);
 		
 	}
 	

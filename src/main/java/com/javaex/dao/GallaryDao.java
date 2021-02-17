@@ -28,7 +28,8 @@ public class GallaryDao {
 		sqlSession.insert("gallary.insertGallary",gallaryVo);
 		
 	}
-
+	
+	//saveName으로 값얻기
 	public GallaryVo getSelectOne(String saveName) {
 		System.out.println("[GallaryDao] : getSelectOne");
 		
@@ -36,6 +37,19 @@ public class GallaryDao {
 		
 		
 	}
+
+	//no로 얻기
+	public GallaryVo getSelectOne(int no) {
+		System.out.println("[GallaryDao] : getSelectOne");
+		return sqlSession.selectOne("gallary.selectOne2",no);
+	}
+
+	public int delete(int no) {
+		System.out.println("[GallaryDao] : delete");
+		return sqlSession.delete("gallary.delete",no);
+	}
+
+	
 
 	
 
