@@ -22,13 +22,7 @@
 
 		<!-- //nav -->
 
-		<div id="aside">
-			<h2>방명록${pageContext.request.contextPath}</h2>
-			<ul>
-				<li>일반방명록</li>
-				<li>ajax방명록</li>
-			</ul>
-		</div>
+		<c:import url="/WEB-INF/views/include/guestAside.jsp"></c:import>
 		<!-- //aside -->
 
 		<div id="content">

@@ -4,20 +4,30 @@
 
 <mapper namespace="guest">
 
-	<select id="selectGuestList" resultType="GuestVo">
+	<select id="selectGuestList" parameterType = "map" resultType="GuestVo">
 		<![CDATA[
-			select rownum,
-  	    		   no,
- 	    		   name,
- 	   		       content,
- 	    		   reg_date as regDate
-			from(select no,
-    	 		        name,
-      			        content,
-      	    	        reg_date
-   	 			 from guestbook
-    	 		 order by no asc) 
-			order by rownum desc
+		select rnum,
+		       no,
+		       name,
+		       content,
+		       regDate
+		from(select rownum rnum,
+		            no,
+		            name,
+		            content,
+		            regDate
+		      from (select no,
+		                   name,
+		                   content,
+		                   reg_date as regDate
+		            from guestbook
+	]]>
+				<if test="keyword != null and keyword !=''">
+		            where content like '%'||#{keyword}||'%'
+				</if>
+		<![CDATA[
+		            order by no desc))
+		            where rnum between #{startRnum} and #{endRnum}
 	]]>
 
 	</select>

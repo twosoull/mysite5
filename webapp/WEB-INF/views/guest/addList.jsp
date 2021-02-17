@@ -18,13 +18,7 @@
 
 		<!-- //nav -->
 
-		<div id="aside">
-			<h2>방명록</h2>
-			<ul>
-				<li>일반방명록</li>
-				<li>ajax방명록</li>
-			</ul>
-		</div>
+		<c:import url="/WEB-INF/views/include/guestAside.jsp"></c:import>
 		<!-- //aside -->
 
 		<div id="content">
@@ -82,7 +76,7 @@
 							<col style="width: 10%;">
 						</colgroup>
 						<tr>
-							<td>${vo.rownum}</td>
+							<td>${vo.no}</td>
 							<td>${vo.name}</td>
 							<td>${vo.regDate}</td>
 							<td><a href="${pageContext.request.contextPath}/guest/deleteForm?no=${vo.no}">[삭제]</a></td>

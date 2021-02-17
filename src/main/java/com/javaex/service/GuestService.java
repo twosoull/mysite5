@@ -1,6 +1,8 @@
 package com.javaex.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,22 @@ public class GuestService {
 	@Autowired
 	private GuestDao guestDao;
 	
-	public List<GuestVo> list() {
+	public List<GuestVo> list(int crtPage, String keyword) {
 		System.out.println("service list()");
 		
-		return guestDao.selectGuestList();
+		int guestCnt = 5;
+		
+		int endRnum = crtPage * guestCnt;
+		System.out.println("endRnum =" +endRnum);
+		int startRnum = (crtPage - 1)*guestCnt+1;
+		System.out.println("startRnum =" +startRnum );
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("startRnum", startRnum);
+		map.put("endRnum", endRnum);
+		map.put("keyword", keyword);
+		
+		return guestDao.selectGuestList(map);
 	}
 	
 	public void add(GuestVo guestVo) {

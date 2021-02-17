@@ -24,7 +24,8 @@ public class ApiGuestbookController {
 	public List<GuestVo> list() {
 		System.out.println("[ApiGuestbookController] /list");
 		
-		return guestService.list();
+		//guestService.list(key);
+		return null;
 	}
 	
 	@ResponseBody

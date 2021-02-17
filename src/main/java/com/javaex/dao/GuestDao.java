@@ -1,6 +1,7 @@
 package com.javaex.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ public class GuestDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<GuestVo> selectGuestList() {
+	public List<GuestVo> selectGuestList(Map<String, Object> map) {
 		System.out.println("Dao selectGuest()");
 		
-		return sqlSession.selectList("guest.selectGuestList");
+		return sqlSession.selectList("guest.selectGuestList",map);
 	}
 	
 	public void insert(GuestVo guestVo) {

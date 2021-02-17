@@ -19,10 +19,12 @@ public class GuestController {
 	private GuestService guestService;
 
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
-	public String list(Model model) {
+	public String list(@RequestParam(value="crtPage", required=false,defaultValue="1")int crtPage,
+					   @RequestParam(value="keyword", required=false,defaultValue="")String keyword
+					   ,Model model) {
 		System.out.println("controller list()");
 
-		model.addAttribute("guestList", guestService.list());
+		model.addAttribute("guestList", guestService.list(crtPage,keyword));
 
 		return "guest/addList";
 	}
